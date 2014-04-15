@@ -1,0 +1,19 @@
+{
+	"name": "pahanini/yii2-consolelog",
+	"description": "Dumps log to console",
+	"keywords": ["yii2", "log", "console"],
+	"homepage": "https://github.com/pahanini/yii2-consolelog",
+	"type": "yii2-extension",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Pavel Tetyaev",
+			"email": "pahanini@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"pahanini\\log\\": ""
+		}
+	}
+}

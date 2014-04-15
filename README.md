@@ -1,0 +1,39 @@
+Console logger
+=======================================================
+
+Dumps output to console, for console application debugging
+
+
+Installation
+------------
+
+Add
+
+```
+"pahanini/yii2-consolelog": "*"
+```
+
+to the require section of your `composer.json` file.
+
+
+Usage
+-----
+
+
+```
+return [
+	'id' => 'app-console',
+	'bootstrap' => ['log'],
+	'components' => [
+		'log' => [
+			'targets' => [
+				[
+					'class' => 'pahanini\yii2-consolelog\ConsoleTarget',
+					'levels' => ['error', 'warning', 'trace'],
+				]
+			],
+		],
+	],
+	'params' => $params,
+];
+```
