@@ -14,6 +14,12 @@ namespace pahanini\log;
 class ConsoleTarget extends \yii\log\Target
 {
 	/**
+	 * Maximum length of string
+	 * @var int
+	 */
+	public $maxLength = 100;
+
+	/**
 	 * Sends log messages to console.
 	 */
 	public function export()
@@ -32,6 +38,9 @@ class ConsoleTarget extends \yii\log\Target
 		$level = \yii\log\Logger::getLevelName($level);
 		if (!is_string($text)) {
 			$text = var_export($text, true);
+		}
+		if ($this->maxLength && ($length = strlen($text)) > $this->maxLength) {
+			$text = substr(str_replace("\n", " ", $text), 0, $this->maxLength);
 		}
 		return "[$level][$category] $text";
 	}
