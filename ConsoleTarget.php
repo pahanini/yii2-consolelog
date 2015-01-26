@@ -6,42 +6,59 @@
 
 namespace pahanini\log;
 
+use Yii;
+use yii\helpers\Console;
+use yii\log\Logger;
+use yii\log\Target;
+
 /**
  * ConsoleTarget writes log to console (useful for debugging console applications)
  *
  * @author pahanini <pahanini@gmail.com>
  */
-class ConsoleTarget extends \yii\log\Target
+class ConsoleTarget extends Target
 {
-	/**
-	 * Maximum length of string
-	 * @var int
-	 */
-	public $maxLength = 100;
+    /**
+     * @var bool If true context message will be added to the end of output
+     */
+    public $enableContextMassage = false;
 
-	/**
-	 * Sends log messages to console.
-	 */
-	public function export()
-	{
-		foreach ($this->messages as $message) {
-			echo $this->formatMessage($message) . "\n";
-		}
-	}
+    /**
+     * @inheritdoc
+     * @return string
+     */
+    protected function getContextMessage()
+    {
+        return $this->enableContextMassage ? parent::getContextMessage() : '';
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function formatMessage($message)
-	{
-		list($text, $level, $category, $timestamp) = $message;
-		$level = \yii\log\Logger::getLevelName($level);
-		if (!is_string($text)) {
-			$text = var_export($text, true);
-		}
-		if ($this->maxLength && ($length = strlen($text)) > $this->maxLength) {
-			$text = substr(str_replace("\n", " ", $text), 0, $this->maxLength);
-		}
-		return "[$level][$category] $text";
-	}
+    /**
+     * @inheritdoc
+     */
+    public function export()
+    {
+        foreach ($this->messages as $message) {
+            echo $this->formatMessage($message) . PHP_EOL;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function formatMessage($message)
+    {
+        $text = $message[0];
+        $level = Logger::getLevelName($message[1]);
+        if (!is_string($text)) {
+            $text = '(not string)';
+        }
+        $level = "[$level]";
+        if (Console::streamSupportsAnsiColors(\STDOUT)) {
+            if ($level == '[error]') {
+                $level = Console::ansiFormat($level, [Console::BG_RED]);
+            }
+            $level = Console::ansiFormat($level, [Console::BOLD]);
+        }
+        return "$level\t$text";
+    }
 }
