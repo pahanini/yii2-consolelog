@@ -28,7 +28,7 @@ return [
 		'log' => [
 			'targets' => [
 				[
-					'class' => 'pahanini\yii2-consolelog\ConsoleTarget',
+					'class' => 'pahanini\log\ConsoleTarget',
 					'levels' => ['error', 'warning', 'trace'],
 				]
 			],
