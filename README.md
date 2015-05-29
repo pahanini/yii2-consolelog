@@ -20,7 +20,7 @@ Usage
 -----
 
 
-```
+```php
 return [
 	'id' => 'app-console',
 	'bootstrap' => ['log'],
