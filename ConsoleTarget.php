@@ -53,13 +53,13 @@ class ConsoleTarget extends Target
      */
     public function formatMessage($message)
     {
-		$text  = $message[0];
+		$text = $message[0];
 		$level = Logger::getLevelName($message[1]);
 		$label = "[$level]";
 		if(is_array($text) || is_object($text)) {
 			$text = json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 		} elseif (!is_string($text)) {
-			$text = 'Message is '.gettype($text);
+			$text = 'Message is ' . gettype($text);
 		}
 		if (Console::streamSupportsAnsiColors(\STDOUT)) {
 			if (isset($this->color[$level])) {
@@ -68,6 +68,6 @@ class ConsoleTarget extends Target
 				$label = Console::ansiFormat($label, [Console::BOLD]);
 			}
 		}
-		return str_pad($label, 25, ' ').''.$text;
+		return str_pad($label, 25, ' ') . $text;
     }
 }
