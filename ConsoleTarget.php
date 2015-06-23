@@ -22,6 +22,12 @@ class ConsoleTarget extends Target
      * @var bool If true context message will be added to the end of output
      */
     public $enableContextMassage = false;
+	/**
+	 * @var array color scheme for message labels
+	 */
+	public $color = [
+		'error' => Console::BG_RED
+	];
 
     /**
      * @inheritdoc
@@ -52,11 +58,12 @@ class ConsoleTarget extends Target
         if (!is_string($text)) {
             $text = '(not string)';
         }
-        $level = "[$level]";
         if (Console::streamSupportsAnsiColors(\STDOUT)) {
-            if ($level == '[error]') {
-                $level = Console::ansiFormat($level, [Console::BG_RED]);
-            }
+			if(isset($this->color[$level])) {
+				$level = Console::ansiFormat("[$level]", [$this->color[$level]]);
+			} else {
+				$level = "[$level]";
+			}
             $level = Console::ansiFormat($level, [Console::BOLD]);
         }
         return "$level\t$text";
