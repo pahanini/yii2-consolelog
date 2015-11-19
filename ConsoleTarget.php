@@ -22,6 +22,7 @@ class ConsoleTarget extends Target
      * @var bool If true context message will be added to the end of output
      */
     public $enableContextMassage = false;
+
     /**
      * @var array color scheme for message labels
      */
