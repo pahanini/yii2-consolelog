@@ -23,6 +23,14 @@ class ConsoleTarget extends Target
      */
     public $enableContextMassage = false;
 
+    public $displayCategory = false;
+
+    public $displayDate = false;
+
+    public $dateFormat = 'Y-m-d H:i:s';
+
+    public $padSize = 30;
+
     /**
      * @var array color scheme for message labels
      */
@@ -50,25 +58,73 @@ class ConsoleTarget extends Target
     }
 
     /**
-     * @inheritdoc
+     * @param array $message
+     * 0 - massage
+     * 1 - level
+     * 2 - category
+     * 3 - timestamp
+     * 4 - ???
+     *
+     * @return string
      */
     public function formatMessage($message)
     {
-        $text = $message[0];
+
+        $label = $this->generateLabel($message);
+        $text = $this->generateText($message);
+
+        return str_pad($label, $this->padSize, ' ') . $text;
+    }
+
+    /**
+     * @param $message
+     *
+     * @return string
+     */
+    private function generateLabel($message)
+    {
+        $label = '';
+
+        //Add date to log
+        if(true == $this->displayDate)
+        {
+            $label.= '['.date($this->dateFormat,time()).']';
+        }
+
+        //Add category to label
+        if(true == $this->displayCategory)
+        {
+            $label.= "[".$message[2]."]";
+        }
         $level = Logger::getLevelName($message[1]);
-        $label = "[$level]";
+
+        $tmpLevel= "[$level]";
+
+        if (Console::streamSupportsAnsiColors(\STDOUT)) {
+            if (isset($this->color[$level])) {
+                $tmpLevel = Console::ansiFormat($tmpLevel, [$this->color[$level]]);
+            } else {
+                $tmpLevel = Console::ansiFormat($tmpLevel, [Console::BOLD]);
+            }
+        }
+        $label.= $tmpLevel;
+
+        return $label;
+    }
+
+    /**
+     * @param $message
+     *
+     * @return string
+     */
+    private function generateText($message)
+    {
+        $text = $message[0];
         if(is_array($text) || is_object($text)) {
-            $text = json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $text = "Array content is \n\r".json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         } elseif (!is_string($text)) {
             $text = 'Message is ' . gettype($text);
         }
-        if (Console::streamSupportsAnsiColors(\STDOUT)) {
-            if (isset($this->color[$level])) {
-                $label = Console::ansiFormat($label, [$this->color[$level]]);
-            } else {
-                $label = Console::ansiFormat($label, [Console::BOLD]);
-            }
-        }
-        return str_pad($label, 25, ' ') . $text;
+        return $text;
     }
 }
