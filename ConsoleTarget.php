@@ -53,7 +53,14 @@ class ConsoleTarget extends Target
     public function export()
     {
         foreach ($this->messages as $message) {
-            echo $this->formatMessage($message) . PHP_EOL;
+            if($message[1] == Logger::LEVEL_ERROR)
+            {
+                Console::error($this->formatMessage($message));
+            }
+            else
+            {
+                Console::output($this->formatMessage($message));
+            }
         }
     }
 
