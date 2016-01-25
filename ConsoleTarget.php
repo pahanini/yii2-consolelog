@@ -53,12 +53,9 @@ class ConsoleTarget extends Target
     public function export()
     {
         foreach ($this->messages as $message) {
-            if($message[1] == Logger::LEVEL_ERROR)
-            {
+            if ($message[1] == Logger::LEVEL_ERROR) {
                 Console::error($this->formatMessage($message));
-            }
-            else
-            {
+            } else {
                 Console::output($this->formatMessage($message));
             }
         }
@@ -93,14 +90,12 @@ class ConsoleTarget extends Target
         $label = '';
 
         //Add date to log
-        if(true == $this->displayDate)
-        {
-            $label.= '['.date($this->dateFormat,time()).']';
+        if (true == $this->displayDate) {
+            $label.= '['.date($this->dateFormat, time()).']';
         }
 
         //Add category to label
-        if(true == $this->displayCategory)
-        {
+        if (true == $this->displayCategory) {
             $label.= "[".$message[2]."]";
         }
         $level = Logger::getLevelName($message[1]);
@@ -127,7 +122,7 @@ class ConsoleTarget extends Target
     private function generateText($message)
     {
         $text = $message[0];
-        if(is_array($text) || is_object($text)) {
+        if (is_array($text) || is_object($text)) {
             $text = "Array content is \n\r".json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         } elseif (!is_string($text)) {
             $text = 'Message is ' . gettype($text);
