@@ -77,7 +77,7 @@ class ConsoleTarget extends Target
         $label = $this->generateLabel($message);
         $text = $this->generateText($message);
 
-        return str_pad($label, $this->padSize, ' ') . $text;
+        return str_pad($label, $this->padSize, ' ') . ' '.$text;
     }
 
     /**
