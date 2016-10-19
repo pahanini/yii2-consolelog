@@ -91,7 +91,7 @@ class ConsoleTarget extends Target
 
         //Add date to log
         if (true == $this->displayDate) {
-            $label.= '['.date($this->dateFormat, time()).']';
+            $label.= '['.date($this->dateFormat, $message[3]).']';
         }
 
         //Add category to label
