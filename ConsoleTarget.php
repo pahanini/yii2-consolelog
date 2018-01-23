@@ -122,10 +122,13 @@ class ConsoleTarget extends Target
     private function generateText($message)
     {
         $text = $message[0];
-        if (is_array($text) || is_object($text)) {
-            $text = "Array content is \n\r".json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        } elseif (!is_string($text)) {
-            $text = 'Message is ' . gettype($text);
+        if (!is_string($text)) {
+            // exceptions may not be serializable if in the call stack somewhere is a Closure
+            if ($text instanceof \Throwable || $text instanceof \Exception) {
+                $text = (string) $text;
+            } else {
+                $text = VarDumper::export($text);
+            }
         }
         return $text;
     }
