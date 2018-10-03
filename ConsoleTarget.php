@@ -10,6 +10,7 @@ use Yii;
 use yii\helpers\Console;
 use yii\log\Logger;
 use yii\log\Target;
+use yii\helpers\VarDumper;
 
 /**
  * ConsoleTarget writes log to console (useful for debugging console applications)
