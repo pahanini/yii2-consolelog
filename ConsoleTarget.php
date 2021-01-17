@@ -92,7 +92,9 @@ class ConsoleTarget extends Target
 
         //Add date to log
         if (true == $this->displayDate) {
-            $label.= '['.date($this->dateFormat, $message[3]).']';
+            $dt = \DateTime::createFromFormat('U.u', $message[3]);
+            $timestamp = $dt->format($this->dateFormat);
+            $label .= "[$timestamp]";
         }
 
         //Add category to label
