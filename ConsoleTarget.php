@@ -4,13 +4,15 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace pahanini\log;
+namespace app\models;
 
-use Yii;
+use Throwable;
+use yii\helpers\BaseConsole;
 use yii\helpers\Console;
 use yii\log\Logger;
 use yii\log\Target;
 use yii\helpers\VarDumper;
+use const STDOUT;
 
 /**
  * ConsoleTarget writes log to console (useful for debugging console applications)
@@ -36,14 +38,14 @@ class ConsoleTarget extends Target
      * @var array color scheme for message labels
      */
     public $color = [
-        'error' => Console::BG_RED
+        'error' => BaseConsole::BG_RED
     ];
 
     /**
      * @inheritdoc
      * @return string
      */
-    protected function getContextMessage()
+    protected function getContextMessage(): string
     {
         return $this->enableContextMassage ? parent::getContextMessage() : '';
     }
@@ -51,7 +53,7 @@ class ConsoleTarget extends Target
     /**
      * @inheritdoc
      */
-    public function export()
+    public function export(): void
     {
         foreach ($this->messages as $message) {
             if ($message[1] == Logger::LEVEL_ERROR) {
@@ -72,7 +74,7 @@ class ConsoleTarget extends Target
      *
      * @return string
      */
-    public function formatMessage($message)
+    public function formatMessage($message): string
     {
 
         $label = $this->generateLabel($message);
@@ -86,28 +88,28 @@ class ConsoleTarget extends Target
      *
      * @return string
      */
-    private function generateLabel($message)
+    private function generateLabel($message): string
     {
         $label = '';
 
         //Add date to log
-        if (true == $this->displayDate) {
-            $label.= '['.date($this->dateFormat, $message[3]).']';
+        if (true === $this->displayDate) {
+            $label.= '['.date($this->dateFormat, (int)$message[3]).']';
         }
 
         //Add category to label
-        if (true == $this->displayCategory) {
+        if (true === $this->displayCategory) {
             $label.= "[".$message[2]."]";
         }
         $level = Logger::getLevelName($message[1]);
 
         $tmpLevel= "[$level]";
 
-        if (Console::streamSupportsAnsiColors(\STDOUT)) {
+        if (Console::streamSupportsAnsiColors(STDOUT)) {
             if (isset($this->color[$level])) {
                 $tmpLevel = Console::ansiFormat($tmpLevel, [$this->color[$level]]);
             } else {
-                $tmpLevel = Console::ansiFormat($tmpLevel, [Console::BOLD]);
+                $tmpLevel = Console::ansiFormat($tmpLevel, [BaseConsole::BOLD]);
             }
         }
         $label.= $tmpLevel;
@@ -120,12 +122,12 @@ class ConsoleTarget extends Target
      *
      * @return string
      */
-    private function generateText($message)
+    private function generateText($message): string
     {
         $text = $message[0];
         if (!is_string($text)) {
             // exceptions may not be serializable if in the call stack somewhere is a Closure
-            if ($text instanceof \Throwable || $text instanceof \Exception) {
+            if ($text instanceof Throwable) {
                 $text = (string) $text;
             } else {
                 $text = VarDumper::export($text);
