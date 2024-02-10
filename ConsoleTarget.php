@@ -4,7 +4,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace app\models;
+namespace pahanini\log;
 
 use Throwable;
 use yii\helpers\BaseConsole;
